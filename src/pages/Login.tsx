@@ -23,11 +23,11 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
-    resolver: yupResolver(schema),
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(schema) as any,
   });
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: any) => {
     setIsSubmitting(true);
     try {
       await login(data);
