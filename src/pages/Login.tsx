@@ -81,7 +81,7 @@ const Login = () => {
                 className="mt-1.5"
                 {...register("email")}
               />
-              {errors.email && <p className="mt-1 text-sm text-destructive">{errors.email.message}</p>}
+              {errors.email && <p className="mt-1 text-sm text-destructive">{String(errors.email.message)}</p>}
             </div>
 
             <div>
@@ -101,7 +101,7 @@ const Login = () => {
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
-              {errors.password && <p className="mt-1 text-sm text-destructive">{errors.password.message}</p>}
+              {errors.password && <p className="mt-1 text-sm text-destructive">{String(errors.password.message)}</p>}
             </div>
 
             <Button type="submit" className="w-full" disabled={isSubmitting}>
