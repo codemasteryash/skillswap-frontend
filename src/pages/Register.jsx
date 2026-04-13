@@ -20,8 +20,6 @@ const schema = yup.object({
     .required("Please confirm your password"),
 });
 
-type FormData = yup.InferType<typeof schema>;
-
 const Register = () => {
   const { register: registerUser } = useAuth();
   const navigate = useNavigate();
@@ -29,15 +27,15 @@ const Register = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { register, handleSubmit, formState: { errors } } = useForm({
-    resolver: yupResolver(schema) as any,
+    resolver: yupResolver(schema),
   });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data) => {
     setIsSubmitting(true);
     try {
       await registerUser({ name: data.name, email: data.email, password: data.password });
       navigate("/dashboard");
-    } catch (err: any) {
+    } catch (err) {
       toast.error(err.response?.data?.message || "Registration failed. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -80,13 +78,13 @@ const Register = () => {
             <div>
               <Label htmlFor="name">Full Name</Label>
               <Input id="name" placeholder="John Doe" className="mt-1.5" {...register("name")} />
-              {errors.name && <p className="mt-1 text-sm text-destructive">{String(errors.name.message)}</p>}
+              {errors.name && <p className="mt-1 text-sm text-destructive">{errors.name.message}</p>}
             </div>
 
             <div>
               <Label htmlFor="email">Email</Label>
               <Input id="email" type="email" placeholder="you@example.com" className="mt-1.5" {...register("email")} />
-              {errors.email && <p className="mt-1 text-sm text-destructive">{String(errors.email.message)}</p>}
+              {errors.email && <p className="mt-1 text-sm text-destructive">{errors.email.message}</p>}
             </div>
 
             <div>
@@ -106,7 +104,7 @@ const Register = () => {
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
-              {errors.password && <p className="mt-1 text-sm text-destructive">{String(errors.password.message)}</p>}
+              {errors.password && <p className="mt-1 text-sm text-destructive">{errors.password.message}</p>}
             </div>
 
             <div>
@@ -119,7 +117,7 @@ const Register = () => {
                 {...register("confirmPassword")}
               />
               {errors.confirmPassword && (
-                <p className="mt-1 text-sm text-destructive">{String(errors.confirmPassword.message)}</p>
+                <p className="mt-1 text-sm text-destructive">{errors.confirmPassword.message}</p>
               )}
             </div>
 
