@@ -15,6 +15,8 @@ const schema = yup.object({
   password: yup.string().min(6, "Min 6 characters").required("Password is required"),
 });
 
+type FormData = yup.InferType<typeof schema>;
+
 const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -22,15 +24,15 @@ const Login = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { register, handleSubmit, formState: { errors } } = useForm({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(schema) as any,
   });
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: any) => {
     setIsSubmitting(true);
     try {
       await login(data);
       navigate("/dashboard");
-    } catch (err) {
+    } catch (err: any) {
       toast.error(err.response?.data?.message || "Login failed. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -79,7 +81,7 @@ const Login = () => {
                 className="mt-1.5"
                 {...register("email")}
               />
-              {errors.email && <p className="mt-1 text-sm text-destructive">{errors.email.message}</p>}
+              {errors.email && <p className="mt-1 text-sm text-destructive">{String(errors.email.message)}</p>}
             </div>
 
             <div>
@@ -99,7 +101,7 @@ const Login = () => {
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
-              {errors.password && <p className="mt-1 text-sm text-destructive">{errors.password.message}</p>}
+              {errors.password && <p className="mt-1 text-sm text-destructive">{String(errors.password.message)}</p>}
             </div>
 
             <Button type="submit" className="w-full" disabled={isSubmitting}>

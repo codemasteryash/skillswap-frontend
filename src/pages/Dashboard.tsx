@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import dashboardService from "@/services/dashboardService";
-import notificationService from "@/services/notificationService";
+import dashboardService, { DashboardSummary, LedgerEntry, Transaction } from "@/services/dashboardService";
+import notificationService, { Notification } from "@/services/notificationService";
 import { toast } from "sonner";
 import {
   CreditCard, TrendingUp, TrendingDown, ArrowUpDown, Clock, Bell, BellDot,
@@ -13,10 +13,10 @@ import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
-  const [summary, setSummary] = useState(null);
-  const [ledger, setLedger] = useState([]);
-  const [transactions, setTransactions] = useState([]);
-  const [notifications, setNotifications] = useState([]);
+  const [summary, setSummary] = useState<DashboardSummary | null>(null);
+  const [ledger, setLedger] = useState<LedgerEntry[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -38,6 +38,7 @@ const Dashboard = () => {
       setUnreadCount(countRes.data.count);
     } catch {
       toast.error("Failed to load dashboard data");
+      // Set fallback empty state
       setSummary({ totalCredits: 0, creditsEarned: 0, creditsSpent: 0, totalTransactions: 0, pendingRequests: 0 });
     } finally {
       setLoading(false);
@@ -48,7 +49,7 @@ const Dashboard = () => {
     fetchData();
   }, [fetchData]);
 
-  const handleMarkRead = async (id) => {
+  const handleMarkRead = async (id: string) => {
     if (!user) return;
     try {
       await notificationService.markRead(id, user.id);
