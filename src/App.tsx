@@ -10,6 +10,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
+import { Indent } from "lucide-react";
+import Index from "./pages/Index";
 
 const queryClient = new QueryClient();
 
