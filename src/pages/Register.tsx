@@ -35,7 +35,7 @@ const Register = () => {
   const onSubmit = async (data: any) => {
     setIsSubmitting(true);
     try {
-      await registerUser({ name: data.name, email: data.email, password: data.password });
+      await registerUser({ username: data.name, email: data.email, password: data.password });
       navigate("/dashboard");
     } catch (err: any) {
       toast.error(err.response?.data?.message || "Registration failed. Please try again.");

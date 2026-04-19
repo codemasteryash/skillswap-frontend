@@ -6,6 +6,7 @@ interface User {
   id: string;
   name: string;
   email: string;
+  role?: string;
 }
 
 interface AuthContextType {
@@ -37,19 +38,35 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = useCallback(async (payload: LoginPayload) => {
     const { data } = await authService.login(payload);
+
+    const mappedUser: User = {
+      id: String(data.userId),
+      name: data.username,
+      email: data.email,
+      role: data.role,
+    };
+
     localStorage.setItem("skillswap_token", data.token);
-    localStorage.setItem("skillswap_user", JSON.stringify(data.user));
+    localStorage.setItem("skillswap_user", JSON.stringify(mappedUser));
     setToken(data.token);
-    setUser(data.user);
+    setUser(mappedUser);
     toast.success("Welcome back!");
   }, []);
 
   const register = useCallback(async (payload: RegisterPayload) => {
     const { data } = await authService.register(payload);
+
+    const mappedUser: User = {
+      id: String(data.userId),
+      name: data.username,
+      email: data.email,
+      role: data.role,
+    };
+
     localStorage.setItem("skillswap_token", data.token);
-    localStorage.setItem("skillswap_user", JSON.stringify(data.user));
+    localStorage.setItem("skillswap_user", JSON.stringify(mappedUser));
     setToken(data.token);
-    setUser(data.user);
+    setUser(mappedUser);
     toast.success("Account created successfully!");
   }, []);
 

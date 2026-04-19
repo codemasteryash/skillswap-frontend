@@ -1,7 +1,7 @@
 import api from "@/lib/api";
 
 export interface RegisterPayload {
-  name: string;
+  username: string;
   email: string;
   password: string;
 }
@@ -13,11 +13,10 @@ export interface LoginPayload {
 
 export interface AuthResponse {
   token: string;
-  user: {
-    id: string;
-    name: string;
-    email: string;
-  };
+  userId: number;
+  email: string;
+  username: string;
+  role: string;
 }
 
 const authService = {
