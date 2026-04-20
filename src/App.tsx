@@ -12,6 +12,7 @@ import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import { Indent } from "lucide-react";
 import Index from "./pages/Index";
+import SkillExchange from "./pages/SkillExchange";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Landing />} />
+            <Route path="/index" element={<Index />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route
@@ -35,6 +37,14 @@ const App = () => (
               }
             />
             <Route path="*" element={<NotFound />} />
+            <Route
+              path="/exchange"
+              element={
+                <ProtectedRoute>
+                  <SkillExchange />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </AuthProvider>
       </BrowserRouter>
@@ -43,3 +53,4 @@ const App = () => (
 );
 
 export default App;
+

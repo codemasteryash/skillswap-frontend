@@ -50,21 +50,9 @@ const features = [
 ];
 
 const steps = [
-  {
-    step: "01",
-    title: "Create Account",
-    description: "Sign up and set up your skill profile",
-  },
-  {
-    step: "02",
-    title: "List Your Skills",
-    description: "Add skills you can teach to others",
-  },
-  {
-    step: "03",
-    title: "Exchange & Earn",
-    description: "Teach, learn, and earn time credits",
-  },
+  { step: "01", title: "Create Account", description: "Sign up and set up your skill profile" },
+  { step: "02", title: "List Your Skills", description: "Add skills you can teach to others" },
+  { step: "03", title: "Exchange & Earn", description: "Teach, learn, and earn time credits" },
 ];
 
 const faqs = [
@@ -179,18 +167,22 @@ const Landing = () => {
                 <Menu className="h-5 w-5 text-foreground" />
               )}
             </button>
+
             {isAuthenticated ? (
-              <Link to="/dashboard" onClick={() => setMobileOpen(false)}>
-                <Button>
-                  Dashboard <ChevronRight className="ml-1 h-4 w-4" />
-                </Button>
-              </Link>
+              <div className="hidden items-center gap-2 sm:flex">
+                <Link to="/exchange">
+                  <Button variant="outline" size="sm">Exchange</Button>
+                </Link>
+                <Link to="/dashboard" onClick={() => setMobileOpen(false)}>
+                  <Button>
+                    Dashboard <ChevronRight className="ml-1 h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
             ) : (
               <div className="hidden items-center gap-2 sm:flex sm:gap-3">
                 <Link to="/login">
-                  <Button variant="ghost" size="sm">
-                    Login
-                  </Button>
+                  <Button variant="ghost" size="sm">Login</Button>
                 </Link>
                 <Link to="/register">
                   <Button size="sm">
@@ -226,12 +218,20 @@ const Landing = () => {
               >
                 FAQ
               </button>
-              {!isAuthenticated && (
+
+              {isAuthenticated ? (
+                <div className="mt-2 flex flex-col gap-2 border-t border-border pt-3">
+                  <Link to="/exchange" onClick={() => setMobileOpen(false)}>
+                    <Button variant="outline" className="w-full">Go to Exchange</Button>
+                  </Link>
+                  <Link to="/dashboard" onClick={() => setMobileOpen(false)}>
+                    <Button className="w-full">Go to Dashboard</Button>
+                  </Link>
+                </div>
+              ) : (
                 <div className="mt-2 flex flex-col gap-2 border-t border-border pt-3">
                   <Link to="/login" onClick={() => setMobileOpen(false)}>
-                    <Button size="lg" className="h-12 px-8 text-base bg-primary text-primary-foreground hover:bg-primary/90">
-                      Login
-                    </Button>
+                    <Button className="w-full">Login</Button>
                   </Link>
                   <Link to="/register" onClick={() => setMobileOpen(false)}>
                     <Button className="w-full">Get Started</Button>
@@ -256,37 +256,48 @@ const Landing = () => {
               Time Credit Based Exchange
             </div>
             <h1 className="mb-6 text-4xl font-bold leading-tight tracking-tight text-primary-foreground sm:text-5xl lg:text-6xl">
-              Exchange Skills,{" "}
-              <span className="text-primary">Grow Together</span>
+              Exchange Skills, <span className="text-primary">Grow Together</span>
             </h1>
             <p className="mb-10 text-lg leading-relaxed text-primary-foreground/60 sm:text-xl">
-              Join a community where your skills are currency. Teach what you know, learn what you
-              need — powered by a fair time-credit economy.
+              Join a community where your skills are currency. Teach what you know,
+              learn what you need - powered by a fair time-credit economy.
             </p>
             <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-              <Link to="/register">
-                <Button size="lg" className="h-12 px-8 text-base">
-                  Get Started Free <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-              <Link to="/login">
-                <Button
-                  size="lg"
-                  className="h-12 px-8 text-base bg-primary text-primary-foreground hover:bg-primary/90"
-                >
-                  Login
-                </Button>
-              </Link>
+              {isAuthenticated ? (
+                <>
+                  <Link to="/exchange">
+                    <Button size="lg" className="h-12 px-8 text-base">
+                      Start Exchange <ArrowRight className="ml-2 h-5 w-5" />
+                    </Button>
+                  </Link>
+                  <Link to="/dashboard">
+                    <Button variant="outline" size="lg" className="h-12 px-8 text-base">
+                      Open Dashboard
+                    </Button>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link to="/register">
+                    <Button size="lg" className="h-12 px-8 text-base">
+                      Get Started Free <ArrowRight className="ml-2 h-5 w-5" />
+                    </Button>
+                  </Link>
+                  <Link to="/login">
+                    <Button size="lg" className="h-12 px-8 text-base bg-primary text-primary-foreground hover:bg-primary/90">
+                      Login
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
+
           <div className="mt-16 flex flex-wrap justify-center gap-8 text-center sm:gap-12">
             {statItems.map((stat) => (
               <div key={stat.label} className="min-w-[120px]">
-                <div
-                  className={`text-2xl font-bold text-primary transition-opacity ${statsLoading ? "animate-pulse opacity-70" : ""
-                    }`}
-                >
-                  {statsLoading ? "—" : formatStat(stat.value)}
+                <div className={`text-2xl font-bold text-primary transition-opacity ${statsLoading ? "animate-pulse opacity-70" : ""}`}>
+                  {statsLoading ? "-" : formatStat(stat.value)}
                 </div>
                 <div className="text-sm text-primary-foreground/50">{stat.label}</div>
               </div>
@@ -298,20 +309,12 @@ const Landing = () => {
       <section id="features" className="scroll-mt-24 py-24">
         <div className="container mx-auto px-4">
           <div className="mx-auto mb-16 max-w-2xl text-center">
-            <h2 className="mb-4 text-3xl font-bold text-foreground sm:text-4xl">
-              Everything You Need to Trade Skills
-            </h2>
-            <p className="text-lg text-muted-foreground">
-              A complete platform built around fairness, transparency, and community growth.
-            </p>
+            <h2 className="mb-4 text-3xl font-bold text-foreground sm:text-4xl">Everything You Need to Trade Skills</h2>
+            <p className="text-lg text-muted-foreground">A complete platform built around fairness, transparency, and community growth.</p>
           </div>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {features.map((feature, i) => (
-              <div
-                key={feature.title}
-                className="group cursor-default rounded-xl border border-border bg-card p-6 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg"
-                style={{ animationDelay: `${i * 100}ms` }}
-              >
+              <div key={feature.title} className="group rounded-xl border border-border bg-card p-6 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg" style={{ animationDelay: `${i * 100}ms` }}>
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 transition-colors group-hover:bg-primary/15">
                   <feature.icon className="h-6 w-6 text-primary" />
                 </div>
@@ -332,9 +335,7 @@ const Landing = () => {
           <div className="mx-auto grid max-w-4xl gap-8 md:grid-cols-3">
             {steps.map((step) => (
               <div key={step.step} className="text-center">
-                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-lg font-bold text-primary-foreground">
-                  {step.step}
-                </div>
+                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-lg font-bold text-primary-foreground">{step.step}</div>
                 <h3 className="mb-2 text-lg font-semibold text-foreground">{step.title}</h3>
                 <p className="text-sm text-muted-foreground">{step.description}</p>
               </div>
@@ -365,12 +366,10 @@ const Landing = () => {
           <div className="mx-auto max-w-2xl rounded-2xl gradient-primary p-12 text-center">
             <Users className="mx-auto mb-4 h-12 w-12 text-primary-foreground/80" />
             <h2 className="mb-4 text-3xl font-bold text-primary-foreground">Ready to Start Swapping?</h2>
-            <p className="mb-8 text-primary-foreground/70">
-              Join thousands of people already exchanging skills and growing together.
-            </p>
-            <Link to="/register">
+            <p className="mb-8 text-primary-foreground/70">Join thousands of people already exchanging skills and growing together.</p>
+            <Link to={isAuthenticated ? "/exchange" : "/register"}>
               <Button size="lg" variant="secondary" className="h-12 px-8 text-base">
-                Create Free Account <ArrowRight className="ml-2 h-5 w-5" />
+                {isAuthenticated ? "Go to Exchange" : "Create Free Account"} <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
           </div>
@@ -387,7 +386,7 @@ const Landing = () => {
               <span className="font-semibold text-foreground">SkillSwap</span>
             </div>
             <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} SkillSwap. All rights reserved.
+              Copyright {new Date().getFullYear()} SkillSwap. All rights reserved.
             </p>
           </div>
         </div>

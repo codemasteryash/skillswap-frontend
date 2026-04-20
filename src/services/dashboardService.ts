@@ -1,50 +1,58 @@
 import api from "@/lib/api";
 
 export interface DashboardSummary {
-  totalCredits: number;
-  creditsEarned: number;
-  creditsSpent: number;
-  totalTransactions: number;
-  pendingRequests: number;
+  userId: number;
+  userName: string;
+  email: string;
+  credits: number;
+  transactionsAsLearnerCount: number;
+  transactionsAsTeacherCount: number;
+  averageRatingAsTeacher: number | null;
 }
 
 export interface LedgerEntry {
-  id: string;
-  type: "EARNED" | "SPENT";
-  amount: number;
-  description: string;
-  createdAt: string;
+  ledgerId: number;
+  transactionId: number | null;
+  changeAmount: number;
+  balanceAfterChange: number;
+  entryType: string;
 }
 
-export interface Transaction {
-  id: string;
-  fromUser: string;
-  toUser: string;
-  skill: string;
-  credits: number;
-  status: "COMPLETED" | "PENDING" | "CANCELLED";
-  createdAt: string;
+export interface TransactionSummary {
+  transactionId: number;
+  providerId: number;
+  receiverId: number;
+  duration: number;
+  status: string;
+  rating: number | null;
+  feedback: string | null;
 }
 
-export interface FullDashboard {
+export interface FullDashboardResponse {
   summary: DashboardSummary;
-  ledger: LedgerEntry[];
-  transactions: Transaction[];
+  recentTransactions: TransactionSummary[];
+  recentLedgerEntries: LedgerEntry[];
 }
 
 const dashboardService = {
-  getSummary: (userId: string) =>
-    api.get<DashboardSummary>(`/api/dashboard/summary`, { params: { userId } }),
+  getSummary: (userId: string | number) =>
+    api.get<DashboardSummary>("/api/dashboard/summary", {
+      params: { userId: Number(userId) },
+    }),
 
-  getLedger: (userId: string, limit = 5) =>
-    api.get<LedgerEntry[]>(`/api/dashboard/ledger`, { params: { userId, limit } }),
+  getLedger: (userId: string | number, limit = 5) =>
+    api.get<LedgerEntry[]>("/api/dashboard/ledger", {
+      params: { userId: Number(userId), limit },
+    }),
 
-  getTransactions: (userId: string, limit = 5) =>
-    api.get<Transaction[]>(`/api/dashboard/transactions`, { params: { userId, limit } }),
+  getTransactions: (userId: string | number, limit = 5) =>
+    api.get<TransactionSummary[]>("/api/dashboard/transactions", {
+      params: { userId: Number(userId), limit },
+    }),
 
-  getFullDashboard: (userId: string, ledgerLimit = 5, transactionLimit = 5) =>
-    api.get<FullDashboard>(`/api/dashboard`, {
-      params: { userId, ledgerLimit, transactionLimit },
+  getFullDashboard: (userId: string | number, ledgerLimit = 5, transactionLimit = 5) =>
+    api.get<FullDashboardResponse>("/api/dashboard", {
+      params: { userId: Number(userId), ledgerLimit, transactionLimit },
     }),
 };
 
